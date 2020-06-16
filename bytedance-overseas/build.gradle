@@ -1,0 +1,70 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "com.yumimobi.ads.thirdparty:bytedance:2.9.0.3.0"
+    implementation 'com.yumimobi.ads:mediation:4.6.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    implementation 'com.yumimobi.ads.thirdparty:androidquery:0.26.7.1'
+}
+
+ext {
+    bintrayRepo = 'ads'
+    bintrayName = project.name
+
+    publishedGroupId = 'com.zplay.android.sdk'
+    artifactId = project.name
+    libraryVersion = System.getenv('TRAVIS_TAG')
+    libraryName = project.name
+
+    // publish aar to in-house(remember change the value of inHouseVersion):
+    // Call ./gradlew artifactoryPublish to publish
+    inHouseVersion = ""
+
+    libraryDescription = 'zplay redpacket SDK'
+
+//    PUBLISH_GROUP_ID = 'com.zplay.android.sdk'
+//    PUBLISH_ARTIFACT_ID = 'redpacket'
+    PUBLISH_GROUP_ID = 'com.yumimobi.ads.thirdparty'
+    PUBLISH_ARTIFACT_ID = 'bytedance'
+//    // publish yumiad aar:
+//    // Call ./gradlew clean build generateRelease to publish
+    PUBLISH_VERSION = '0.0.1'
+
+
+    siteUrl = 'https://github.com/yumimobi/AtmosplayAds-android'
+    gitUrl = 'https://github.com/yumimobi/AtmosplayAds-android.git'
+}
+
+if (inHouseVersion) {
+    apply from: "https://raw.githubusercontent.com/yumimobi/android-scripts/master/artifactory_dev_upload.gradle"
+}
+
+if (PUBLISH_VERSION) {
+    apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/master/android-release-aar.gradle'
+}
